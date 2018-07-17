@@ -1,0 +1,5 @@
+#!/bin/bash
+
+# creates a new migration file
+# expects file name as an argument
+migrate -verbose create -ext sql -dir db/migrations "$@"
