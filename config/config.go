@@ -12,9 +12,19 @@ import (
 var repo *gorm.DB
 
 // Init config
-func Init() {
+func Init() *gorm.DB {
 	// start db connection
-	initDB()
+	dialect := os.Getenv("DB_DIALECT")
+	db, err := gorm.Open(dialect, dbConfig())
+
+	if err != nil {
+		panic("failed to connect database")
+	}
+
+	// seed data and assign db to repo variable
+	repo = db
+
+	return repo
 }
 
 // Repo returns database
@@ -23,18 +33,6 @@ func Repo() *gorm.DB {
 }
 
 // unexported functions
-
-// InitDB initialises database connection
-func initDB() {
-	db, err := gorm.Open(os.Getenv("DB_DIALECT"), dbConfig())
-
-	if err != nil {
-		panic("failed to connect database")
-	}
-
-	repo = db
-	defer db.Close()
-}
 
 func dbConfig() string {
 	str := "host=" + os.Getenv("DB_HOST") +
