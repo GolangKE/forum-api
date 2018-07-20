@@ -2,6 +2,7 @@ package models
 
 import (
 	"../../config"
+	"golang.org/x/crypto/bcrypt"
 )
 
 // User model, table: users
@@ -17,4 +18,10 @@ func (u User) createNew() (interface{}, error) {
 	db := config.Repo()
 	err := db.Create(&u).Error
 	return u, err
+}
+
+func (u *User) HashPassword(password string) error {
+	bytes, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	u.PasswordDigest = string(bytes)
+	return err
 }
