@@ -20,6 +20,8 @@ func (u User) createNew() (interface{}, error) {
 	return u, err
 }
 
+// HashPassword generates encrypted password from
+// password string and assigns to PasswordDigest
 func (u *User) HashPassword(password string) error {
 	bytes, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	u.PasswordDigest = string(bytes)
