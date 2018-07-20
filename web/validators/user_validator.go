@@ -18,10 +18,13 @@ func (r Registration) validate(c *gin.Context) (models.Model, error) {
 		return models.User{}, err
 	}
 
-	user := models.User{}
-	user.Email = r.Email
-	user.Username = r.Username
-	user.PasswordDigest = r.Password
+	user := models.User{
+		Email:    r.Email,
+		Username: r.Username,
+	}
+
+	// hash user's password
+	user.HashPassword(r.Password)
 
 	return user, nil
 }

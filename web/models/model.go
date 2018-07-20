@@ -27,8 +27,8 @@ type DBError struct {
 
 // Create adds a new record to the database
 func Create(m Model) (interface{}, error) {
-	i, err := m.createNew()
-	return i, err
+	data, err := m.createNew()
+	return data, err
 }
 
 // Error wraps database error info in DBError object
