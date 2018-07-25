@@ -2,18 +2,41 @@ package web
 
 import (
 	"./handlers"
+	"./middlewares"
+	jwt "github.com/appleboy/gin-jwt"
 	"github.com/gin-gonic/gin"
 )
 
 // Register the app's router, accepts an instance
 // of engine with default middleware already attached
 func Register(router *gin.Engine) {
+	// Register App's middlewares
+	router.Use(gin.Logger())
+	router.Use(gin.Recovery())
+
 	// group API routes
 	api := router.Group("/api/v1")
 
 	// ping check route
-	api.GET("/ping", handlers.Ping)
+	api.GET("/ping", authMiddleware().MiddlewareFunc(), handlers.Ping)
 
-	// new user with email/password route
-	api.POST("/users/new", handlers.NewUser)
+	// Group Users API endpoints
+	usersEndpoint(api.Group("/users"))
+
+	// Group Sessions API endpoints
+	sessionsEndpoint(api.Group("/sessions"))
+}
+
+func usersEndpoint(router *gin.RouterGroup) {
+	router.POST("/new", handlers.NewUser)
+}
+
+func sessionsEndpoint(router *gin.RouterGroup) {
+	router.POST("/new", authMiddleware().LoginHandler)
+	router.GET("/refresh_token", authMiddleware().MiddlewareFunc(), authMiddleware().RefreshHandler)
+	router.DELETE("/", authMiddleware().MiddlewareFunc(), handlers.DestroySession)
+}
+
+func authMiddleware() *jwt.GinJWTMiddleware {
+	return middlewares.AuthMiddleware()
 }

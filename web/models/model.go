@@ -11,6 +11,7 @@ import (
 // Model is the main model interface
 type Model interface {
 	createNew() (interface{}, error)
+	findOne(data interface{}) (interface{}, error)
 }
 
 // Base is the forum-api base model
@@ -28,6 +29,12 @@ type DBError struct {
 // Create adds a new record to the database
 func Create(m Model) (interface{}, error) {
 	data, err := m.createNew()
+	return data, err
+}
+
+// FindOne fetches a single record from the database
+func FindOne(m Model, condition interface{}) (interface{}, error) {
+	data, err := m.findOne(condition)
 	return data, err
 }
 
