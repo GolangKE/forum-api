@@ -17,7 +17,7 @@ func main() {
 	defer repo.Close()
 
 	// register app router
-	router := gin.Default()
+	router := gin.New()
 
 	web.Register(router)
 

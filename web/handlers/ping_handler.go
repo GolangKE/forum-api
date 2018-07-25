@@ -1,6 +1,8 @@
 package handlers
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/gin-gonic/gin"
+)
 
 // Ping check
 func Ping(context *gin.Context) {

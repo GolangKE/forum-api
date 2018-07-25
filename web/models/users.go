@@ -20,10 +20,23 @@ func (u User) createNew() (interface{}, error) {
 	return u, err
 }
 
+func (u User) findOne(condition interface{}) (interface{}, error) {
+	db := config.Repo()
+	err := db.Where(condition).First(&u).Error
+	return u, err
+}
+
 // HashPassword generates encrypted password from
 // password string and assigns to PasswordDigest
 func (u *User) HashPassword(password string) error {
 	bytes, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	u.PasswordDigest = string(bytes)
+	return err
+}
+
+// CheckPassword compares given password against
+// the user's hashed PasswordDigest
+func (u *User) CheckPassword(password string) error {
+	err := bcrypt.CompareHashAndPassword([]byte(u.PasswordDigest), []byte(password))
 	return err
 }
