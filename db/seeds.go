@@ -22,6 +22,9 @@ func createUsers(db *gorm.DB) error {
 	}
 
 	if db.Where("email = ?", user.Email).First(&user).RecordNotFound() {
+		// set user password
+		user.HashPassword("123456")
+
 		// create users. rollback if an error occurs
 		if err := db.Create(&user).Error; err != nil {
 			db.Rollback()
