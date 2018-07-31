@@ -19,6 +19,7 @@ type Base struct {
 	ID        string `gorm:"type:uuid;primary_key;default:uuid_generate_v4()"`
 	CreatedAt time.Time
 	UpdatedAt time.Time
+	DeletedAt *time.Time
 }
 
 // DBError is the database error type

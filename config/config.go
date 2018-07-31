@@ -21,7 +21,10 @@ func Init() *gorm.DB {
 		panic("failed to connect database")
 	}
 
-	// seed data and assign db to repo variable
+	// set logMode to true
+	db.LogMode(true)
+
+	// assign gorm.DB instance to repo
 	repo = db
 
 	return repo

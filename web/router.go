@@ -33,8 +33,12 @@ func usersEndpoint(router *gin.RouterGroup) {
 
 func sessionsEndpoint(router *gin.RouterGroup) {
 	router.POST("/new", authMiddleware().LoginHandler)
-	router.GET("/refresh_token", authMiddleware().MiddlewareFunc(), authMiddleware().RefreshHandler)
-	router.DELETE("/", authMiddleware().MiddlewareFunc(), handlers.DestroySession)
+
+	authRequired := router.Group("/", authMiddleware().MiddlewareFunc())
+	{
+		authRequired.GET("/refresh_token", authMiddleware().RefreshHandler)
+		authRequired.DELETE("/", handlers.DestroySession)
+	}
 }
 
 func authMiddleware() *jwt.GinJWTMiddleware {
